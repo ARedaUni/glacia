@@ -1,0 +1,37 @@
+name: Deploy Docs 
+on:
+  push:
+    branches:
+      - dev
+      - dev-v2
+      - main
+    paths:
+      - 'elysia/**'
+      - '.github/workflows/backend-docs.yml'
+      
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - uses: actions/cache@v4
+        with:
+          key: ${{ github.ref }}
+          path: .cache
+      - name: Install mkdocs dependencies
+        working-directory: ./elysia
+        run: pip install 'mkdocs-material[imaging]'
+      - name: Install mkdocstrings
+        working-directory: ./elysia
+        run: pip install 'mkdocstrings[python]'
+      - name: Install additional dependencies
+        working-directory: ./elysia
+        run: pip install pillow cairosvg
+      - name: Deploy docs
+        working-directory: ./elysia
+        run: mkdocs gh-deploy --force

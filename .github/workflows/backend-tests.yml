@@ -6,6 +6,9 @@ on:
       - main
       - dev
       - 'release/*'
+    paths:
+      - 'elysia/**'
+      - '.github/workflows/backend-tests.yml'
       
 permissions:
   contents: read
@@ -28,17 +31,20 @@ jobs:
           python-version: ${{ matrix.python-version }}
           
       - name: Install dependencies
+        working-directory: ./elysia
         run: |
           python -m pip install --upgrade pip
         continue-on-error: true
         
       - name: Install Elysia
+        working-directory: ./elysia
         run: |
           pip install ".[dev]"
         continue-on-error: true
         
       - name: Test with pytest
         id: pytest
+        working-directory: ./elysia
         run: |
           pytest --ignore=tests/requires_env --tb=short -v --junitxml=pytest-results.xml
         continue-on-error: true
@@ -48,7 +54,7 @@ jobs:
         if: (!cancelled())
         with:
           files: |
-            pytest-results.xml
+            elysia/pytest-results.xml
           check_name: "Pytest Results"
           comment_title: "Unit Test Results"
           comment_mode: always

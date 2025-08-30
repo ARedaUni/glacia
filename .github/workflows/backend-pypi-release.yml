@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*"
+    paths:
+      - 'elysia/**'
 
 jobs:
   build:
@@ -30,6 +32,7 @@ jobs:
           --user
 
       - name: Update version in pyproject.toml
+        working-directory: ./elysia
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           echo "Setting version to $TAG_VERSION in pyproject.toml"
@@ -43,13 +46,14 @@ jobs:
           --user
 
       - name: Build a binary wheel and a source tarball
+        working-directory: ./elysia
         run: python3 -m build
 
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
-          path: dist/
+          path: elysia/dist/
 
   publish-to-pypi:
     name: >-

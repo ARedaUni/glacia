@@ -3,8 +3,14 @@ name: CI
 on:
   push:
     branches: [main]
+    paths:
+      - 'elysia-frontend/**'
+      - '.github/workflows/frontend-ci.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'elysia-frontend/**'
+      - '.github/workflows/frontend-ci.yml'
 
 permissions:
   contents: read
@@ -22,9 +28,12 @@ jobs:
         with:
           node-version: "20.x"
           cache: "npm"
+          cache-dependency-path: ./elysia-frontend/package-lock.json
 
       - name: Install dependencies
+        working-directory: ./elysia-frontend
         run: npm ci
 
       - name: Build application
+        working-directory: ./elysia-frontend
         run: npm run build
