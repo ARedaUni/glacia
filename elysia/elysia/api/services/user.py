@@ -217,7 +217,8 @@ class UserManager:
         Check all trees in all TreeManagers across all users and remove any that have not been active in the last tree_timeout.
         """
         for user_id in self.users:
-            self.users[user_id]["tree_manager"].check_all_trees_timeout()
+            if "tree_manager" in self.users[user_id]:
+                self.users[user_id]["tree_manager"].check_all_trees_timeout()
 
     def check_user_timeout(self, user_id: str):
         """
