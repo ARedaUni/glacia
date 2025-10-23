@@ -2,7 +2,6 @@ import os
 from cryptography.fernet import InvalidToken
 import json
 from pathlib import Path
-
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv, set_key
